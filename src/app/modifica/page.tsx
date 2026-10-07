@@ -1,6 +1,6 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { useRouter, useParams } from 'next/navigation'
+import { useEffect, useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { TransactionType } from '@/lib/types'
 import { useCategories } from '@/lib/useCategories'
@@ -12,10 +12,10 @@ const TYPE_LABELS: { value: TransactionType; label: string; color: string }[] = 
   { value: 'investimento', label: 'Investimento', color: 'bg-purple-500/20 text-purple-400 border-purple-500/50' },
 ]
 
-export default function ModificaPage() {
+function ModificaTransazione() {
   const router = useRouter()
-  const params = useParams()
-  const id = params.id as string
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id') ?? ''
 
   const [type, setType] = useState<TransactionType>('spesa')
   const [amount, setAmount] = useState('')
@@ -183,5 +183,13 @@ export default function ModificaPage() {
         </button>
       </form>
     </div>
+  )
+}
+
+export default function ModificaPage() {
+  return (
+    <Suspense>
+      <ModificaTransazione />
+    </Suspense>
   )
 }

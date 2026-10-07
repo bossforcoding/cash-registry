@@ -39,7 +39,7 @@ export default function TransactionCard({ transaction, onDelete, showEdit }: Pro
         </span>
         {showEdit && (
           <Link
-            href={`/modifica/${id}`}
+            href={`/modifica?id=${id}`}
             className="p-1.5 rounded-lg text-slate-600 hover:text-blue-400 hover:bg-slate-800 transition-colors"
           >
             <Pencil size={14} />

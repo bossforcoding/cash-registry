@@ -2,7 +2,7 @@
 
 A personal finance tracker for income, expenses and investments, built with Next.js and Supabase. It is designed mobile-first and can be installed on the phone as a PWA.
 
-**Live demo:** _coming soon_
+**[Live demo](https://bossforcoding.github.io/cash-registry/)** (demo mode, fictional data)
 
 ![Cash Registry screenshots](docs/screenshots.png)
 
@@ -39,6 +39,10 @@ Open http://localhost:3000. Without further configuration the app starts in demo
 4. Restart `npm run dev`.
 
 > **Security note:** the included SQL policies allow full access with the anon key, which is fine for local use only. The app has no login, so before deploying it with a real database, add [Supabase Auth](https://supabase.com/docs/guides/auth) and restrict the row-level security policies to the authenticated user.
+
+### Deploy
+
+The app is exported as a static site (`output: "export"`), so it can be hosted anywhere. `./deploy-demo.sh` builds the demo and publishes it to GitHub Pages.
 
 ### Import from Excel
 
