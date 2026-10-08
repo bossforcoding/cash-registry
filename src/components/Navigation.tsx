@@ -14,26 +14,38 @@ const items = [
 export default function Navigation() {
   const pathname = usePathname()
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur border-t border-slate-800 z-50">
-      <div className="max-w-2xl mx-auto flex">
+    <div
+      className="fixed bottom-0 inset-x-0 z-50 flex justify-center px-3"
+      style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 10px)' }}
+    >
+      <nav className="flex w-full max-w-[480px] h-[62px] items-center rounded-[26px] border border-line-strong bg-surface/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.18)]">
         {items.map(({ href, label, icon: Icon }) => {
           const active = href === '/gestione'
             ? pathname.startsWith('/gestione') || pathname.startsWith('/categorie') || pathname.startsWith('/spese-fisse')
             : pathname === href
+          if (href === '/aggiungi') {
+            return (
+              <Link key={href} href={href} aria-label={label} className="flex-1 flex justify-center">
+                <span className={`w-11 h-11 rounded-2xl flex items-center justify-center bg-brand text-white shadow-lg shadow-brand/30 transition-transform active:scale-95 ${active ? 'ring-2 ring-brand/40 ring-offset-2 ring-offset-surface' : ''}`}>
+                  <Icon size={22} strokeWidth={2.4} />
+                </span>
+              </Link>
+            )
+          }
           return (
             <Link
               key={href}
               href={href}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] transition-colors ${
-                active ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'
+              className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-1.5 transition-colors ${
+                active ? 'text-brand' : 'text-fg-3 hover:text-fg'
               }`}
             >
-              <Icon size={20} strokeWidth={active ? 2.5 : 1.5} />
-              <span>{label}</span>
+              <Icon size={19} strokeWidth={active ? 2.3 : 1.8} />
+              <span className="text-[9px] font-semibold tracking-wide">{label}</span>
             </Link>
           )
         })}
-      </div>
-    </nav>
+      </nav>
+    </div>
   )
 }

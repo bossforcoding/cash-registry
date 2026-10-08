@@ -56,16 +56,14 @@ export default function CategoriePage() {
   }
 
   return (
-    <div className="px-4 pt-6 pb-4">
-      <h1 className="text-xl font-bold mb-5">Categorie</h1>
-
+    <div className="px-4 pt-6 pb-4 max-w-3xl mx-auto">
       {/* Tab tipo */}
       <div className="flex gap-2 mb-5">
         {TYPE_TABS.map(({ value, label }) => (
           <button key={value}
             onClick={() => { setActiveType(value); setAdding(false); setEditing(null) }}
             className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
-              activeType === value ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'
+              activeType === value ? 'bg-brand text-white' : 'bg-surface-2 text-fg-2'
             }`}>
             {label}
           </button>
@@ -73,9 +71,9 @@ export default function CategoriePage() {
       </div>
 
       {/* Lista categorie */}
-      <div className="bg-slate-900 rounded-2xl overflow-hidden mb-4">
+      <div className="card rounded-2xl overflow-hidden mb-4">
         {categories.map(cat => (
-          <div key={cat.id} className="border-b border-slate-800 last:border-0">
+          <div key={cat.id} className="border-b border-line last:border-0">
             {editing?.id === cat.id ? (
               /* Form modifica inline */
               <div className="p-3 space-y-3">
@@ -83,23 +81,23 @@ export default function CategoriePage() {
                   value={editing.name}
                   onChange={e => setEditing({ ...editing, name: e.target.value })}
                   placeholder="Nome categoria..."
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full bg-surface-2 border border-line-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand"
                   autoFocus
                 />
                 <input
                   value={editing.description}
                   onChange={e => setEditing({ ...editing, description: e.target.value })}
                   placeholder="Descrizione (es. cosa inserire qui)..."
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+                  className="w-full bg-surface-2 border border-line-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand"
                 />
                 <ColorPicker value={editing.hex} onChange={hex => setEditing({ ...editing, hex })} />
                 <div className="flex gap-2">
                   <button onClick={handleSaveEdit}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors">
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-brand hover:bg-brand/90 text-white rounded-lg text-sm font-medium transition-colors">
                     <Check size={15} /> Salva
                   </button>
                   <button onClick={() => setEditing(null)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm text-slate-400 transition-colors">
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-surface-2 hover:bg-surface-3 rounded-lg text-sm text-fg-2 transition-colors">
                     <X size={15} /> Annulla
                   </button>
                 </div>
@@ -111,15 +109,15 @@ export default function CategoriePage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm">{cat.name}</p>
                   {cat.description && (
-                    <p className="text-xs text-slate-500 truncate">{cat.description}</p>
+                    <p className="text-xs text-fg-3 truncate">{cat.description}</p>
                   )}
                 </div>
                 <button onClick={() => setEditing({ id: cat.id, name: cat.name, hex: cat.hex, description: cat.description ?? '' })}
-                  className="p-1.5 text-slate-600 hover:text-blue-400 hover:bg-slate-800 rounded-lg transition-colors">
+                  className="p-1.5 text-fg-4 hover:text-brand hover:bg-surface-2 rounded-lg transition-colors">
                   <Pencil size={14} />
                 </button>
                 <button onClick={() => handleDelete(cat)}
-                  className="p-1.5 text-slate-600 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors">
+                  className="p-1.5 text-fg-4 hover:text-neg hover:bg-surface-2 rounded-lg transition-colors">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -128,43 +126,43 @@ export default function CategoriePage() {
         ))}
 
         {categories.length === 0 && !adding && (
-          <p className="text-center text-slate-500 py-8 text-sm">Nessuna categoria</p>
+          <p className="text-center text-fg-3 py-8 text-sm">Nessuna categoria</p>
         )}
       </div>
 
       {/* Form nuova categoria */}
       {adding ? (
-        <div className="bg-slate-900 rounded-2xl p-4 space-y-3">
-          <p className="text-sm font-semibold text-slate-300">Nuova categoria</p>
+        <div className="card rounded-2xl p-4 space-y-3">
+          <p className="text-sm font-semibold text-fg">Nuova categoria</p>
           <input
             value={newName}
             onChange={e => setNewName(e.target.value)}
             placeholder="Nome categoria..."
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            className="w-full bg-surface-2 border border-line-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand"
             autoFocus
           />
           <input
             value={newDesc}
             onChange={e => setNewDesc(e.target.value)}
             placeholder="Descrizione (es. cosa inserire qui)..."
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+            className="w-full bg-surface-2 border border-line-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand"
             onKeyDown={e => e.key === 'Enter' && handleAdd()}
           />
           <ColorPicker value={newHex} onChange={setNewHex} />
           <div className="flex gap-2">
             <button onClick={handleAdd}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm font-medium transition-colors">
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-brand hover:bg-brand/90 text-white rounded-xl text-sm font-medium transition-colors">
               <Check size={15} /> Aggiungi
             </button>
             <button onClick={() => { setAdding(false); setNewName(''); setNewDesc('') }}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm text-slate-400 transition-colors">
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-surface-2 hover:bg-surface-3 rounded-xl text-sm text-fg-2 transition-colors">
               <X size={15} /> Annulla
             </button>
           </div>
         </div>
       ) : (
         <button onClick={() => { setAdding(true); setEditing(null) }}
-          className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 hover:bg-slate-800 border border-dashed border-slate-700 rounded-2xl text-sm text-slate-400 hover:text-slate-200 transition-colors">
+          className="w-full flex items-center justify-center gap-2 py-3 bg-surface hover:bg-surface-2 border border-dashed border-line-strong rounded-2xl text-sm text-fg-2 hover:text-fg transition-colors">
           <Plus size={16} /> Aggiungi categoria
         </button>
       )}
@@ -175,14 +173,14 @@ export default function CategoriePage() {
 function ColorPicker({ value, onChange }: { value: string; onChange: (hex: string) => void }) {
   return (
     <div>
-      <p className="text-xs text-slate-500 mb-2">Colore</p>
+      <p className="text-xs text-fg-3 mb-2">Colore</p>
       <div className="flex flex-wrap gap-2">
         {COLORS.map(hex => (
           <button
             key={hex}
             type="button"
             onClick={() => onChange(hex)}
-            className={`w-7 h-7 rounded-full transition-transform ${value === hex ? 'scale-125 ring-2 ring-white ring-offset-2 ring-offset-slate-900' : 'hover:scale-110'}`}
+            className={`w-7 h-7 rounded-full transition-transform ${value === hex ? 'scale-125 ring-2 ring-fg ring-offset-2 ring-offset-surface' : 'hover:scale-110'}`}
             style={{ backgroundColor: hex }}
           />
         ))}

@@ -7,9 +7,9 @@ import { useCategories } from '@/lib/useCategories'
 import { CheckCircle2 } from 'lucide-react'
 
 const TYPES: { value: TransactionType; label: string; color: string }[] = [
-  { value: 'spesa',        label: 'Spesa',        color: 'bg-red-500/20 text-red-400 border-red-500/50' },
-  { value: 'entrata',      label: 'Entrata',      color: 'bg-green-500/20 text-green-400 border-green-500/50' },
-  { value: 'investimento', label: 'Investimento', color: 'bg-purple-500/20 text-purple-400 border-purple-500/50' },
+  { value: 'spesa',        label: 'Spesa',        color: 'bg-neg/12 text-neg border-neg/50' },
+  { value: 'entrata',      label: 'Entrata',      color: 'bg-pos/12 text-pos border-pos/50' },
+  { value: 'investimento', label: 'Investimento', color: 'bg-inv/12 text-inv border-inv/50' },
 ]
 
 export default function AggiungiPage() {
@@ -74,20 +74,18 @@ export default function AggiungiPage() {
   if (success) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <CheckCircle2 size={64} className="text-green-400" />
+        <CheckCircle2 size={64} className="text-pos" />
         <p className="text-lg font-semibold">Salvato!</p>
       </div>
     )
   }
 
   return (
-    <div className="px-4 pt-6">
-      <h1 className="text-xl font-bold mb-6">Aggiungi transazione</h1>
-
+    <div className="px-4 pt-6 max-w-xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Tipo */}
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Tipo</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Tipo</label>
           <div className="grid grid-cols-3 gap-2">
             {TYPES.map(({ value, label, color }) => (
               <button
@@ -95,7 +93,7 @@ export default function AggiungiPage() {
                 type="button"
                 onClick={() => handleTypeChange(value)}
                 className={`py-2.5 rounded-xl text-sm font-medium border transition-all ${
-                  type === value ? color : 'border-slate-700 text-slate-500 bg-slate-900'
+                  type === value ? color : 'border-line-strong text-fg-3 bg-surface'
                 }`}
               >
                 {label}
@@ -106,7 +104,7 @@ export default function AggiungiPage() {
 
         {/* Importo */}
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Importo (€)</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Importo (€)</label>
           <input
             type="number"
             inputMode="decimal"
@@ -115,25 +113,25 @@ export default function AggiungiPage() {
             value={amount}
             onChange={e => setAmount(e.target.value)}
             placeholder="0.00"
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-2xl font-bold text-center focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-2xl font-bold text-center focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
         {/* Descrizione */}
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Descrizione</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Descrizione</label>
           <input
             type="text"
             value={description}
             onChange={e => setDescription(e.target.value)}
             placeholder="es. Tigros, Cinema..."
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
         {/* Categoria */}
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Categoria</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Categoria</label>
           <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto">
             {categories.map(({ name, hex }) => (
               <button
@@ -142,8 +140,8 @@ export default function AggiungiPage() {
                 onClick={() => setCategory(name)}
                 className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm border transition-all text-left ${
                   category === name
-                    ? 'border-2 bg-slate-800'
-                    : 'border-slate-700 bg-slate-900'
+                    ? 'border-2 bg-surface-2'
+                    : 'border-line-strong bg-surface'
                 }`}
                 style={category === name ? { borderColor: hex } : {}}
               >
@@ -156,21 +154,21 @@ export default function AggiungiPage() {
 
         {/* Data */}
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Data</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Data</label>
           <input
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+        {error && <p className="text-neg text-sm text-center">{error}</p>}
 
         <button
           type="submit"
           disabled={saving}
-          className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-semibold py-4 rounded-2xl transition-colors text-base"
+          className="w-full bg-brand hover:bg-brand/90 text-white disabled:opacity-50 text-white font-semibold py-4 rounded-2xl transition-colors text-base"
         >
           {saving ? 'Salvataggio...' : 'Salva'}
         </button>

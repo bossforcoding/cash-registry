@@ -7,7 +7,11 @@ import { useRouter } from 'next/navigation'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts'
-import { ChevronLeft, ChevronRight, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
+import { TrendingDown, TrendingUp, Wallet } from 'lucide-react'
+import ThemeToggle from '@/components/ThemeToggle'
+
+const CURRENT_YEAR = new Date().getFullYear()
+const YEAR_OPTIONS = Array.from({ length: CURRENT_YEAR - 2019 }, (_, i) => CURRENT_YEAR - i)
 
 interface MonthlyRow {
   idx: number; mese: string
@@ -104,61 +108,59 @@ export default function Dashboard() {
     .sort((a, b) => b.value - a.value)
 
   return (
-    <div className="px-4 pt-6 pb-4">
-      {/* Year switcher */}
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-xl font-bold">Anno {year}</h1>
-        <div className="flex items-center gap-1">
-          <button onClick={() => setYear(y => y - 1)}
-            className="p-2 rounded-full hover:bg-slate-800 transition-colors">
-            <ChevronLeft size={18} />
-          </button>
-          <button onClick={() => setYear(y => y + 1)} disabled={year >= now.getFullYear()}
-            className="p-2 rounded-full hover:bg-slate-800 disabled:opacity-30 transition-colors">
-            <ChevronRight size={18} />
-          </button>
-        </div>
+    <div className="px-4 pt-5 pb-4">
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <select
+          value={year}
+          onChange={e => setYear(parseInt(e.target.value))}
+          aria-label="Anno"
+          className="select-base card rounded-xl pl-4 py-2.5 text-lg font-bold focus:outline-none focus:border-brand transition-colors"
+        >
+          {YEAR_OPTIONS.map(y => <option key={y} value={y}>{y}</option>)}
+        </select>
+        <ThemeToggle />
       </div>
 
       {loading ? (
-        <p className="text-center text-slate-500 py-16 text-sm">Caricamento...</p>
+        <p className="text-center text-fg-3 py-16 text-sm animate-pulse">Caricamento...</p>
       ) : (
         <>
           {/* Totali anno */}
-          <div className="grid grid-cols-3 gap-3 mb-5">
-            <StatCard label="Entrate"   amount={tot.entrate}   color="text-green-400"  icon={<TrendingUp size={14} />}
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <StatCard label="Entrate"   amount={tot.entrate}   color="text-pos"  icon={<TrendingUp size={14} />}
               delta={pct(tot.entrate, prevTot.entrate)} />
-            <StatCard label="Spese"     amount={tot.spese}     color="text-red-400"    icon={<TrendingDown size={14} />}
+            <StatCard label="Spese"     amount={tot.spese}     color="text-neg"    icon={<TrendingDown size={14} />}
               delta={pct(tot.spese, prevTot.spese)} invertDelta />
             <StatCard label="Risparmio" amount={tot.risparmio} icon={<Wallet size={14} />}
-              color={tot.risparmio >= 0 ? 'text-blue-400' : 'text-orange-400'}
+              color={tot.risparmio >= 0 ? 'text-brand' : 'text-warn'}
               delta={pct(tot.risparmio, prevTot.risparmio)} />
           </div>
 
+          <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
           {/* Entrate vs Spese */}
-          <div className="bg-slate-900 rounded-2xl p-4 mb-4">
-            <h3 className="text-sm font-semibold text-slate-300 mb-3">Entrate vs Spese</h3>
+          <div className="card rounded-2xl p-4">
+            <h3 className="text-sm font-semibold text-fg mb-3">Entrate vs Spese</h3>
             <ResponsiveContainer width="100%" height={190}>
               <BarChart data={chartMonthly} margin={{ top: 0, right: 0, left: -22, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="mese" tick={{ fontSize: 9, fill: '#94a3b8' }} />
-                <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} />
-                <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8, fontSize: 12 }}
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--line-strong)" />
+                <XAxis dataKey="mese" tick={{ fontSize: 9, fill: 'var(--fg-3)' }} />
+                <YAxis tick={{ fontSize: 9, fill: 'var(--fg-3)' }} />
+                <Tooltip contentStyle={{ background: 'var(--surface)', border: '1px solid var(--line-strong)', color: 'var(--fg)', borderRadius: 8, fontSize: 12 }}
                   formatter={(v) => [`${Number(v).toFixed(0)}€`, '']} />
-                <Bar dataKey="entrate" name="Entrate" fill="#22c55e" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="spese"   name="Spese"   fill="#ef4444" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="entrate" name="Entrate" fill="var(--pos)" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="spese"   name="Spese"   fill="var(--neg)" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* Breakdown mensile */}
-          <div className="bg-slate-900 rounded-2xl overflow-hidden mb-4">
-            <div className="grid grid-cols-5 px-3 py-2 border-b border-slate-800">
-              <span className="text-xs text-slate-500">Mese</span>
-              <span className="text-xs text-slate-500 text-right">Entr.</span>
-              <span className="text-xs text-slate-500 text-right">Spese</span>
-              <span className="text-xs text-slate-500 text-right">ROI</span>
-              <span className="text-xs text-slate-500 text-right">Netto</span>
+          <div className="card rounded-2xl overflow-hidden lg:row-span-2">
+            <div className="grid grid-cols-5 px-3 py-2 border-b border-line">
+              <span className="text-xs text-fg-3">Mese</span>
+              <span className="text-xs text-fg-3 text-right">Entr.</span>
+              <span className="text-xs text-fg-3 text-right">Spese</span>
+              <span className="text-xs text-fg-3 text-right">ROI</span>
+              <span className="text-xs text-fg-3 text-right">Netto</span>
             </div>
             {monthly.map((d) => {
               const netRoi  = d.roi - d.invCosts
@@ -170,23 +172,23 @@ export default function Dashboard() {
               return (
                 <button key={d.idx}
                   onClick={() => router.push(`/statistiche?month=${d.idx}&year=${year}`)}
-                  className={`w-full grid grid-cols-5 px-3 py-2.5 border-b border-slate-800 last:border-0 text-left transition-colors ${hasData ? 'hover:bg-slate-800' : 'opacity-40 cursor-default'}`}>
+                  className={`w-full grid grid-cols-5 px-3 py-2.5 border-b border-line last:border-0 text-left transition-colors ${hasData ? 'hover:bg-surface-2' : 'opacity-40 cursor-default'}`}>
                   <span className="text-xs">{MESI[d.idx].substring(0, 3)}</span>
-                  <span className="text-xs text-right tabular-nums text-green-400">
+                  <span className="text-xs text-right tabular-nums text-pos">
                     {d.entrate > 0 ? `+${d.entrate.toFixed(0)}€` : '—'}
                   </span>
-                  <span className="text-xs text-right tabular-nums text-red-400">
+                  <span className="text-xs text-right tabular-nums text-neg">
                     {d.spese > 0 ? `-${d.spese.toFixed(0)}€` : '—'}
                   </span>
-                  <span className="text-xs text-right tabular-nums text-purple-400">
+                  <span className="text-xs text-right tabular-nums text-inv">
                     {(d.roi > 0 || d.invCosts > 0) ? `${netRoi >= 0 ? '+' : ''}${netRoi.toFixed(0)}€` : '—'}
                   </span>
                   <div className="flex flex-col items-end">
-                    <span className={`text-xs tabular-nums font-medium ${netto >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+                    <span className={`text-xs tabular-nums font-medium ${netto >= 0 ? 'text-brand' : 'text-warn'}`}>
                       {hasData ? `${netto >= 0 ? '+' : ''}${netto.toFixed(0)}€` : '—'}
                     </span>
                     {delta != null && hasData && (
-                      <span className={`text-[9px] tabular-nums ${delta >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      <span className={`text-[9px] tabular-nums ${delta >= 0 ? 'text-pos' : 'text-neg'}`}>
                         {delta >= 0 ? '▲' : '▼'}{Math.abs(delta).toFixed(0)}%
                       </span>
                     )}
@@ -198,17 +200,17 @@ export default function Dashboard() {
 
           {/* Spese per categoria */}
           {catData.length > 0 && (
-            <div className="bg-slate-900 rounded-2xl p-4 mb-4">
-              <h3 className="text-sm font-semibold text-slate-300 mb-1">Spese per categoria</h3>
-              <p className="text-xs text-slate-500 mb-3">Totale {year} — {tot.spese.toFixed(0)}€</p>
+            <div className="card rounded-2xl p-4">
+              <h3 className="text-sm font-semibold text-fg mb-1">Spese per categoria</h3>
+              <p className="text-xs text-fg-3 mb-3">Totale {year} — {tot.spese.toFixed(0)}€</p>
               <ResponsiveContainer width="100%" height={catData.length * 34 + 10}>
                 <BarChart data={catData} layout="vertical" margin={{ top: 0, right: 48, left: 0, bottom: 0 }}>
-                  <XAxis type="number" tick={{ fontSize: 10, fill: '#94a3b8' }} tickFormatter={v => `${v}€`} />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#cbd5e1' }} width={115} />
-                  <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8, fontSize: 12 }}
+                  <XAxis type="number" tick={{ fontSize: 10, fill: 'var(--fg-3)' }} tickFormatter={v => `${v}€`} />
+                  <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: 'var(--fg-2)' }} width={115} />
+                  <Tooltip contentStyle={{ background: 'var(--surface)', border: '1px solid var(--line-strong)', color: 'var(--fg)', borderRadius: 8, fontSize: 12 }}
                     formatter={(v) => [`${Number(v).toFixed(2)}€`, '']} />
                   <Bar dataKey="value" radius={[0, 4, 4, 0]} minPointSize={3}
-                    label={{ position: 'right', fontSize: 10, fill: '#94a3b8', formatter: (v: unknown) => `${Number(v).toFixed(0)}€` }}>
+                    label={{ position: 'right', fontSize: 10, fill: 'var(--fg-3)', formatter: (v: unknown) => `${Number(v).toFixed(0)}€` }}>
                     {catData.map((_, i) => <Cell key={i} fill={catData[i].color} />)}
                   </Bar>
                 </BarChart>
@@ -218,23 +220,24 @@ export default function Dashboard() {
 
           {/* Entrate per categoria */}
           {catEntrateData.length > 0 && (
-            <div className="bg-slate-900 rounded-2xl p-4 mb-4">
-              <h3 className="text-sm font-semibold text-slate-300 mb-1">Entrate per categoria</h3>
-              <p className="text-xs text-slate-500 mb-3">Totale {year} — {tot.entrate.toFixed(0)}€</p>
+            <div className="card rounded-2xl p-4">
+              <h3 className="text-sm font-semibold text-fg mb-1">Entrate per categoria</h3>
+              <p className="text-xs text-fg-3 mb-3">Totale {year} — {tot.entrate.toFixed(0)}€</p>
               <ResponsiveContainer width="100%" height={catEntrateData.length * 34 + 10}>
                 <BarChart data={catEntrateData} layout="vertical" margin={{ top: 0, right: 48, left: 0, bottom: 0 }}>
-                  <XAxis type="number" tick={{ fontSize: 10, fill: '#94a3b8' }} tickFormatter={v => `${v}€`} />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#cbd5e1' }} width={115} />
-                  <Tooltip contentStyle={{ background: '#1e293b', border: 'none', borderRadius: 8, fontSize: 12 }}
+                  <XAxis type="number" tick={{ fontSize: 10, fill: 'var(--fg-3)' }} tickFormatter={v => `${v}€`} />
+                  <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: 'var(--fg-2)' }} width={115} />
+                  <Tooltip contentStyle={{ background: 'var(--surface)', border: '1px solid var(--line-strong)', color: 'var(--fg)', borderRadius: 8, fontSize: 12 }}
                     formatter={(v) => [`${Number(v).toFixed(2)}€`, '']} />
                   <Bar dataKey="value" radius={[0, 4, 4, 0]} minPointSize={3}
-                    label={{ position: 'right', fontSize: 10, fill: '#94a3b8', formatter: (v: unknown) => `${Number(v).toFixed(0)}€` }}>
+                    label={{ position: 'right', fontSize: 10, fill: 'var(--fg-3)', formatter: (v: unknown) => `${Number(v).toFixed(0)}€` }}>
                     {catEntrateData.map((_, i) => <Cell key={i} fill={catEntrateData[i].color} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
           )}
+          </div>
         </>
       )}
     </div>
@@ -247,17 +250,17 @@ function StatCard({ label, amount, color, icon, delta, invertDelta }: {
 }) {
   const deltaPositive = delta != null ? (invertDelta ? delta < 0 : delta >= 0) : false
   return (
-    <div className="bg-slate-900 rounded-2xl p-3">
-      <div className={`flex items-center gap-1.5 mb-1 ${color}`}>
+    <div className="card rounded-2xl p-3 md:p-4">
+      <div className={`flex items-center gap-1.5 mb-1.5 ${color}`}>
         {icon}
-        <span className="text-xs font-medium">{label}</span>
+        <span className="text-xs font-semibold uppercase tracking-wide">{label}</span>
       </div>
-      <p className={`text-lg font-bold tabular-nums ${color}`}>
+      <p className={`text-lg md:text-2xl font-bold tabular-nums tracking-tight ${color}`}>
         {amount >= 0 ? '' : '-'}{Math.abs(amount).toFixed(0)}€
       </p>
       {delta != null && (
-        <p className={`text-[11px] tabular-nums mt-0.5 ${deltaPositive ? 'text-green-400' : 'text-red-400'}`}>
-          {delta >= 0 ? '▲' : '▼'} {Math.abs(delta).toFixed(0)}% vs anno prec.
+        <p className={`text-[11px] tabular-nums mt-0.5 ${deltaPositive ? 'text-pos' : 'text-neg'}`}>
+          {delta >= 0 ? '▲' : '▼'} {Math.abs(delta).toFixed(0)}% <span className="hidden sm:inline">vs anno prec.</span>
         </p>
       )}
     </div>

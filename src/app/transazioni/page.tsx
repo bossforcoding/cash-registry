@@ -153,28 +153,28 @@ function TransazioniContent() {
       <div className="px-4 mb-3 flex gap-2">
         <select value={filterMonth}
           onChange={e => { setFilterMonth(parseInt(e.target.value)); setPage(0) }}
-          className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors appearance-none">
+          className="select-base flex-1 min-w-0 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand transition-colors">
           <option value={0}>Tutti i mesi</option>
           {MESI.map((nome, i) => <option key={i + 1} value={i + 1}>{nome}</option>)}
         </select>
         <select value={filterYear}
           onChange={e => { setFilterYear(parseInt(e.target.value)); setPage(0) }}
-          className="w-28 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 transition-colors appearance-none">
+          className="select-base w-28 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-brand transition-colors">
           {YEAR_OPTIONS.map(y => <option key={y} value={y}>{y}</option>)}
         </select>
       </div>
 
       {/* Ricerca */}
       <div className="px-4 mb-3">
-        <div className="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 focus-within:border-blue-500 transition-colors">
-          <Search size={16} className="text-slate-500 flex-shrink-0" />
+        <div className="flex items-center gap-2 bg-surface border border-line-strong rounded-xl px-3 py-2.5 focus-within:border-brand transition-colors">
+          <Search size={16} className="text-fg-3 flex-shrink-0" />
           <input type="text" value={search}
             onChange={e => { setSearch(e.target.value); setFilterCategory('') }}
             placeholder="Cerca descrizione o categoria..."
-            className="flex-1 bg-transparent text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none" />
+            className="flex-1 bg-transparent text-sm text-fg placeholder:text-fg-4 focus:outline-none" />
           {search && (
             <button onClick={() => { setSearch(''); setFilterCategory('') }}
-              className="text-slate-500 hover:text-slate-300 transition-colors">
+              className="text-fg-3 hover:text-fg transition-colors">
               <X size={15} />
             </button>
           )}
@@ -185,13 +185,13 @@ function TransazioniContent() {
       <div className="px-4 mb-3 flex gap-2">
         <input type="number" inputMode="decimal" placeholder="Min €"
           value={minAmount} onChange={e => setMinAmount(e.target.value)}
-          className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+          className="flex-1 min-w-0 bg-surface border border-line-strong rounded-xl px-3 py-2 text-sm text-fg placeholder:text-fg-4 focus:outline-none focus:border-brand transition-colors" />
         <input type="number" inputMode="decimal" placeholder="Max €"
           value={maxAmount} onChange={e => setMaxAmount(e.target.value)}
-          className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+          className="flex-1 min-w-0 bg-surface border border-line-strong rounded-xl px-3 py-2 text-sm text-fg placeholder:text-fg-4 focus:outline-none focus:border-brand transition-colors" />
         {(minAmount || maxAmount) && (
           <button onClick={() => { setMinAmount(''); setMaxAmount('') }}
-            className="px-3 text-slate-500 hover:text-slate-300 bg-slate-900 border border-slate-700 rounded-xl transition-colors">
+            className="px-3 text-fg-3 hover:text-fg bg-surface border border-line-strong rounded-xl transition-colors">
             <X size={14} />
           </button>
         )}
@@ -202,7 +202,7 @@ function TransazioniContent() {
         {(Object.keys(TYPE_LABELS) as (TransactionType | 'tutti')[]).map(t => (
           <button key={t} onClick={() => { setFilterType(t); setFilterCategory('') }}
             className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-              filterType === t ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+              filterType === t ? 'bg-brand text-white' : 'bg-surface-2 text-fg-2 hover:text-fg'
             }`}>
             {TYPE_LABELS[t]}
           </button>
@@ -216,7 +216,7 @@ function TransazioniContent() {
           return (
             <button key={name} onClick={() => setFilterCategory(active ? '' : name)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border transition-all ${
-                active ? 'text-white border-transparent' : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
+                active ? 'text-white border-transparent' : 'bg-surface border-line-strong text-fg-2 hover:text-fg'
               }`}
               style={active ? { backgroundColor: hex, borderColor: hex } : {}}>
               <span className="w-1.5 h-1.5 rounded-full flex-shrink-0"
@@ -229,25 +229,25 @@ function TransazioniContent() {
 
       {/* Totali filtrati */}
       {!loading && totalCount > 0 && (
-        <div className="mx-4 mb-3 bg-slate-900 rounded-xl px-4 py-2.5 flex items-center gap-3 text-xs">
-          <span className="text-green-400 tabular-nums">+{totals.entrate.toFixed(0)}€</span>
-          <span className="text-slate-700">|</span>
-          <span className="text-red-400 tabular-nums">−{totals.spese.toFixed(0)}€</span>
-          <span className="text-slate-700">|</span>
-          <span className={`tabular-nums font-medium ${netto >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+        <div className="mx-4 mb-3 card rounded-xl px-4 py-2.5 flex items-center gap-3 text-xs">
+          <span className="text-pos tabular-nums">+{totals.entrate.toFixed(0)}€</span>
+          <span className="text-fg-4">|</span>
+          <span className="text-neg tabular-nums">−{totals.spese.toFixed(0)}€</span>
+          <span className="text-fg-4">|</span>
+          <span className={`tabular-nums font-medium ${netto >= 0 ? 'text-brand' : 'text-warn'}`}>
             {netto >= 0 ? '+' : ''}{netto.toFixed(0)}€ netto
           </span>
-          <span className="ml-auto text-slate-500">{totalCount} voci</span>
+          <span className="ml-auto text-fg-3">{totalCount} voci</span>
         </div>
       )}
 
       {/* Lista */}
       <div className="mx-4">
-        <div className="bg-slate-900 rounded-2xl overflow-hidden">
+        <div className="card rounded-2xl overflow-hidden">
           {loading ? (
-            <p className="text-center text-slate-500 py-10 text-sm">Caricamento...</p>
+            <p className="text-center text-fg-3 py-10 text-sm">Caricamento...</p>
           ) : transactions.length === 0 ? (
-            <p className="text-center text-slate-500 py-10 text-sm">Nessuna transazione trovata</p>
+            <p className="text-center text-fg-3 py-10 text-sm">Nessuna transazione trovata</p>
           ) : (
             <>
               {transactions.map(t => (
@@ -255,7 +255,7 @@ function TransazioniContent() {
               ))}
               {hasMore && (
                 <button onClick={() => fetchPage(page + 1, true)} disabled={loadingMore}
-                  className="w-full py-4 text-sm text-blue-400 hover:text-blue-300 disabled:text-slate-600 transition-colors border-t border-slate-800">
+                  className="w-full py-4 text-sm text-brand hover:text-brand/80 disabled:text-fg-4 transition-colors border-t border-line">
                   {loadingMore ? 'Caricamento...' : `Mostra altri (${totalCount - transactions.length} rimasti)`}
                 </button>
               )}

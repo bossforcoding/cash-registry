@@ -7,9 +7,9 @@ import { useCategories } from '@/lib/useCategories'
 import { CheckCircle2, ArrowLeft } from 'lucide-react'
 
 const TYPE_LABELS: { value: TransactionType; label: string; color: string }[] = [
-  { value: 'spesa',        label: 'Spesa',        color: 'bg-red-500/20 text-red-400 border-red-500/50' },
-  { value: 'entrata',      label: 'Entrata',      color: 'bg-green-500/20 text-green-400 border-green-500/50' },
-  { value: 'investimento', label: 'Investimento', color: 'bg-purple-500/20 text-purple-400 border-purple-500/50' },
+  { value: 'spesa',        label: 'Spesa',        color: 'bg-neg/12 text-neg border-neg/50' },
+  { value: 'entrata',      label: 'Entrata',      color: 'bg-pos/12 text-pos border-pos/50' },
+  { value: 'investimento', label: 'Investimento', color: 'bg-inv/12 text-inv border-inv/50' },
 ]
 
 function ModificaTransazione() {
@@ -79,30 +79,30 @@ function ModificaTransazione() {
   }
 
   if (loadingData) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500 text-sm">Caricamento...</div>
+    return <div className="flex items-center justify-center min-h-[60vh] text-fg-3 text-sm">Caricamento...</div>
   }
 
   if (success) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <CheckCircle2 size={64} className="text-green-400" />
+        <CheckCircle2 size={64} className="text-pos" />
         <p className="text-lg font-semibold">Modificato!</p>
       </div>
     )
   }
 
   return (
-    <div className="px-4 pt-6">
+    <div className="px-4 pt-6 max-w-xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-slate-800 transition-colors">
+        <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-surface-2 transition-colors">
           <ArrowLeft size={20} />
         </button>
-        <h1 className="text-xl font-bold">Modifica transazione</h1>
+        <span className="text-sm text-fg-3">Indietro</span>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Tipo</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Tipo</label>
           <div className="grid grid-cols-3 gap-2">
             {TYPE_LABELS.map(({ value, label, color }) => (
               <button
@@ -110,7 +110,7 @@ function ModificaTransazione() {
                 type="button"
                 onClick={() => handleTypeChange(value)}
                 className={`py-2.5 rounded-xl text-sm font-medium border transition-all ${
-                  type === value ? color : 'border-slate-700 text-slate-500 bg-slate-900'
+                  type === value ? color : 'border-line-strong text-fg-3 bg-surface'
                 }`}
               >
                 {label}
@@ -120,7 +120,7 @@ function ModificaTransazione() {
         </div>
 
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Importo (€)</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Importo (€)</label>
           <input
             type="number"
             inputMode="decimal"
@@ -128,22 +128,22 @@ function ModificaTransazione() {
             min="0"
             value={amount}
             onChange={e => setAmount(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-2xl font-bold text-center focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-2xl font-bold text-center focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Descrizione</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Descrizione</label>
           <input
             type="text"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Categoria</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Categoria</label>
           <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto">
             {categories.map(({ name, hex }) => (
               <button
@@ -151,7 +151,7 @@ function ModificaTransazione() {
                 type="button"
                 onClick={() => setCategory(name)}
                 className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm border transition-all text-left ${
-                  category === name ? 'border-2 bg-slate-800' : 'border-slate-700 bg-slate-900'
+                  category === name ? 'border-2 bg-surface-2' : 'border-line-strong bg-surface'
                 }`}
                 style={category === name ? { borderColor: hex } : {}}
               >
@@ -163,21 +163,21 @@ function ModificaTransazione() {
         </div>
 
         <div>
-          <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">Data</label>
+          <label className="text-xs text-fg-2 uppercase tracking-wider mb-2 block">Data</label>
           <input
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+        {error && <p className="text-neg text-sm text-center">{error}</p>}
 
         <button
           type="submit"
           disabled={saving}
-          className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-semibold py-4 rounded-2xl transition-colors text-base"
+          className="w-full bg-brand hover:bg-brand/90 text-white disabled:opacity-50 text-white font-semibold py-4 rounded-2xl transition-colors text-base"
         >
           {saving ? 'Salvataggio...' : 'Salva modifiche'}
         </button>

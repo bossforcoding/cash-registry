@@ -71,23 +71,21 @@ export default function BilancioPage() {
 
   return (
     <div className="px-4 pt-4">
-      <h1 className="text-xl font-bold mb-4">Bilancio annuale</h1>
-
-      <div className="flex items-center justify-between mb-4 bg-slate-900 rounded-2xl px-4 py-3">
-        <button onClick={() => setYear(y => y - 1)} className="p-1 hover:text-white text-slate-400 transition-colors">
+      <div className="flex items-center justify-between mb-4 card rounded-2xl px-4 py-3">
+        <button onClick={() => setYear(y => y - 1)} className="p-1 hover:text-fg text-fg-2 transition-colors">
           <ChevronLeft size={20} />
         </button>
         <span className="font-semibold">{year}</span>
-        <button onClick={() => setYear(y => y + 1)} className="p-1 hover:text-white text-slate-400 transition-colors">
+        <button onClick={() => setYear(y => y + 1)} className="p-1 hover:text-fg text-fg-2 transition-colors">
           <ChevronRight size={20} />
         </button>
       </div>
 
       {loading ? (
-        <p className="text-center text-slate-500 py-10 text-sm">Caricamento...</p>
+        <p className="text-center text-fg-3 py-10 text-sm">Caricamento...</p>
       ) : (
-        <div className="bg-slate-900 rounded-2xl overflow-hidden">
-          <div className="grid grid-cols-5 px-3 py-2 text-xs font-semibold text-slate-500 border-b border-slate-800">
+        <div className="card rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-5 px-3 py-2 text-xs font-semibold text-fg-3 border-b border-line">
             <span>Mese</span>
             <span className="text-right">Entrate</span>
             <span className="text-right">Spese</span>
@@ -100,22 +98,22 @@ export default function BilancioPage() {
             return (
               <div
                 key={r.mese}
-                className={`grid grid-cols-5 px-3 py-2.5 text-xs border-b border-slate-800 last:border-0 ${
+                className={`grid grid-cols-5 px-3 py-2.5 text-xs border-b border-line last:border-0 ${
                   !hasData ? 'opacity-40' : ''
-                } ${i === now.getMonth() && year === now.getFullYear() ? 'bg-slate-800/50' : ''}`}
+                } ${i === now.getMonth() && year === now.getFullYear() ? 'bg-surface-2/70' : ''}`}
               >
-                <span className="font-medium text-slate-300">{r.mese.substring(0, 3)}</span>
-                <span className="text-right text-green-400 tabular-nums">
+                <span className="font-medium text-fg">{r.mese.substring(0, 3)}</span>
+                <span className="text-right text-pos tabular-nums">
                   {r.entrate > 0 ? r.entrate.toFixed(0) + '€' : '—'}
                 </span>
-                <span className="text-right text-red-400 tabular-nums">
+                <span className="text-right text-neg tabular-nums">
                   {r.spese > 0 ? r.spese.toFixed(0) + '€' : '—'}
                 </span>
-                <span className={`text-right tabular-nums ${r.netInv >= 0 ? 'text-purple-400' : 'text-orange-400'}`}>
+                <span className={`text-right tabular-nums ${r.netInv >= 0 ? 'text-inv' : 'text-warn'}`}>
                   {hasData ? fmt(r.netInv) : '—'}
                 </span>
                 <span className={`text-right font-semibold tabular-nums ${
-                  r.risparmio > 0 ? 'text-blue-400' : r.risparmio < 0 ? 'text-orange-400' : 'text-slate-500'
+                  r.risparmio > 0 ? 'text-brand' : r.risparmio < 0 ? 'text-warn' : 'text-fg-3'
                 }`}>
                   {hasData ? fmt(r.risparmio) : '—'}
                 </span>
@@ -123,14 +121,14 @@ export default function BilancioPage() {
             )
           })}
 
-          <div className="grid grid-cols-5 px-3 py-3 text-xs font-bold border-t-2 border-slate-700 bg-slate-800/50">
-            <span className="text-slate-300">TOT</span>
-            <span className="text-right text-green-400 tabular-nums">{totals.entrate.toFixed(0)}€</span>
-            <span className="text-right text-red-400 tabular-nums">{totals.spese.toFixed(0)}€</span>
-            <span className={`text-right tabular-nums ${totals.netInv >= 0 ? 'text-purple-400' : 'text-orange-400'}`}>
+          <div className="grid grid-cols-5 px-3 py-3 text-xs font-bold border-t-2 border-line-strong bg-surface-2/70">
+            <span className="text-fg">TOT</span>
+            <span className="text-right text-pos tabular-nums">{totals.entrate.toFixed(0)}€</span>
+            <span className="text-right text-neg tabular-nums">{totals.spese.toFixed(0)}€</span>
+            <span className={`text-right tabular-nums ${totals.netInv >= 0 ? 'text-inv' : 'text-warn'}`}>
               {fmt(totals.netInv)}
             </span>
-            <span className={`text-right tabular-nums ${totals.risparmio >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+            <span className={`text-right tabular-nums ${totals.risparmio >= 0 ? 'text-brand' : 'text-warn'}`}>
               {fmt(totals.risparmio)}
             </span>
           </div>

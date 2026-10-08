@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import DemoBanner from '@/components/DemoBanner'
+import { themeInitScript, THEME_COLORS } from '@/lib/theme'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0f172a',
+  themeColor: THEME_COLORS.dark,
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -22,12 +23,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" className="dark">
-      <body className={`${geist.variable} font-sans antialiased bg-slate-950 text-slate-50 min-h-screen`}>
+    <html lang="it" className={`dark ${geist.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
+      <body className="font-sans antialiased bg-canvas text-fg min-h-screen transition-colors">
         <DemoBanner />
-        <div className="pb-24">
+        <main className="mx-auto w-full max-w-screen-2xl pb-28 md:px-4">
           {children}
-        </div>
+        </main>
         <Navigation />
       </body>
     </html>

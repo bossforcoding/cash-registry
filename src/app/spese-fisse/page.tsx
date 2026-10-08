@@ -16,9 +16,9 @@ interface FixedExpense {
 }
 
 const TYPE_COLOR: Record<TransactionType, string> = {
-  spesa:        'text-red-400',
-  entrata:      'text-green-400',
-  investimento: 'text-purple-400',
+  spesa:        'text-neg',
+  entrata:      'text-pos',
+  investimento: 'text-inv',
 }
 const TYPE_LABEL: Record<TransactionType, string> = {
   spesa: 'Spesa', entrata: 'Entrata', investimento: 'Investimento',
@@ -173,26 +173,24 @@ export default function SpeseFissePage() {
   const netto = totEntrate - totSpese - totInv
 
   return (
-    <div className="px-4 pt-6 pb-4">
-      <h1 className="text-xl font-bold mb-5">Spese fisse</h1>
-
+    <div className="px-4 pt-6 pb-4 max-w-3xl mx-auto">
       {/* Selettore mese per applicazione */}
-      <div className="bg-slate-900 rounded-2xl p-4 mb-4">
-        <p className="text-xs text-slate-500 mb-3">Applica voci al mese:</p>
+      <div className="card rounded-2xl p-4 mb-4">
+        <p className="text-xs text-fg-3 mb-3">Applica voci al mese:</p>
         <div className="flex items-center justify-between mb-4">
           <button onClick={() => month === 0 ? (setMonth(11), setYear(y => y - 1)) : setMonth(m => m - 1)}
-            className="p-2 rounded-full hover:bg-slate-800 transition-colors">
+            className="p-2 rounded-full hover:bg-surface-2 transition-colors">
             <ChevronLeft size={18} />
           </button>
           <span className="font-semibold">{MESI[month]} {year}</span>
           <button onClick={() => month === 11 ? (setMonth(0), setYear(y => y + 1)) : setMonth(m => m + 1)}
-            className="p-2 rounded-full hover:bg-slate-800 transition-colors">
+            className="p-2 rounded-full hover:bg-surface-2 transition-colors">
             <ChevronRight size={18} />
           </button>
         </div>
 
         {applied ? (
-          <div className="flex items-center justify-center gap-2 py-3 bg-green-500/10 rounded-xl text-green-400 text-sm font-medium">
+          <div className="flex items-center justify-center gap-2 py-3 bg-pos/10 rounded-xl text-pos text-sm font-medium">
             <Check size={16} /> Voci inserite in {MESI[month]}!
           </div>
         ) : selectionMode ? (
@@ -200,25 +198,25 @@ export default function SpeseFissePage() {
             <button
               onClick={() => handleApply(items.filter(i => selectedIds.has(i.id)))}
               disabled={applying || selectedIds.size === 0}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-xl text-sm font-semibold transition-colors">
+              className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand hover:bg-brand/90 text-white disabled:opacity-50 rounded-xl text-sm font-semibold transition-colors">
               <Repeat size={16} />
               {applying ? 'Inserimento...' : `Applica ${selectedIds.size} selezionate`}
             </button>
             <button onClick={exitSelectionMode}
-              className="px-4 flex items-center justify-center bg-slate-800 hover:bg-slate-700 rounded-xl text-slate-400 transition-colors">
+              className="px-4 flex items-center justify-center bg-surface-2 hover:bg-surface-3 rounded-xl text-fg-2 transition-colors">
               <X size={16} />
             </button>
           </div>
         ) : (
           <div className="flex gap-2">
             <button onClick={() => handleApply()} disabled={applying || items.length === 0}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-xl text-sm font-semibold transition-colors">
+              className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand hover:bg-brand/90 text-white disabled:opacity-50 rounded-xl text-sm font-semibold transition-colors">
               <Repeat size={16} />
               {applying ? 'Inserimento...' : `Tutte (${items.length})`}
             </button>
             <button onClick={() => { setSelectionMode(true); setSelectedIds(new Set()) }}
               disabled={items.length === 0}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-800 hover:bg-slate-700 disabled:opacity-50 rounded-xl text-sm font-semibold text-slate-300 transition-colors">
+              className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-2 hover:bg-surface-3 disabled:opacity-50 rounded-xl text-sm font-semibold text-fg transition-colors">
               <CheckSquare size={16} />
               Seleziona alcune
             </button>
@@ -227,58 +225,58 @@ export default function SpeseFissePage() {
       </div>
 
       {/* Riepilogo totali */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-slate-900 rounded-xl p-3">
-          <p className="text-xs text-slate-500">Entrate fisse</p>
-          <p className="text-base font-bold text-green-400 tabular-nums">+{totEntrate.toFixed(2)}€</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div className="card rounded-xl p-3">
+          <p className="text-xs text-fg-3">Entrate fisse</p>
+          <p className="text-base font-bold text-pos tabular-nums">+{totEntrate.toFixed(2)}€</p>
         </div>
-        <div className="bg-slate-900 rounded-xl p-3">
-          <p className="text-xs text-slate-500">Spese fisse</p>
-          <p className="text-base font-bold text-red-400 tabular-nums">-{totSpese.toFixed(2)}€</p>
+        <div className="card rounded-xl p-3">
+          <p className="text-xs text-fg-3">Spese fisse</p>
+          <p className="text-base font-bold text-neg tabular-nums">-{totSpese.toFixed(2)}€</p>
         </div>
-        <div className="bg-slate-900 rounded-xl p-3">
-          <p className="text-xs text-slate-500">Investimenti fissi</p>
-          <p className="text-base font-bold text-purple-400 tabular-nums">-{totInv.toFixed(2)}€</p>
+        <div className="card rounded-xl p-3">
+          <p className="text-xs text-fg-3">Investimenti fissi</p>
+          <p className="text-base font-bold text-inv tabular-nums">-{totInv.toFixed(2)}€</p>
         </div>
-        <div className="bg-slate-900 rounded-xl p-3">
-          <p className="text-xs text-slate-500">Netto mensile</p>
-          <p className={`text-base font-bold tabular-nums ${netto >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+        <div className="card rounded-xl p-3">
+          <p className="text-xs text-fg-3">Netto mensile</p>
+          <p className={`text-base font-bold tabular-nums ${netto >= 0 ? 'text-brand' : 'text-warn'}`}>
             {netto >= 0 ? '+' : ''}{netto.toFixed(2)}€
           </p>
         </div>
       </div>
 
       {/* Note / checklist */}
-      <div className="bg-slate-900 rounded-2xl p-4 mb-4">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Note</p>
+      <div className="card rounded-2xl p-4 mb-4">
+        <p className="text-xs font-semibold text-fg-2 uppercase tracking-wider mb-3">Note</p>
         <textarea
           value={notes}
           onChange={e => handleNotesChange(e.target.value)}
           placeholder={"- Controllare scadenza abbonamento\n- Verificare addebito bolletta\n- ..."}
           rows={5}
-          className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+          className="w-full bg-surface-2 border border-line-strong rounded-xl px-3 py-2.5 text-sm text-fg placeholder:text-fg-4 focus:outline-none focus:border-brand transition-colors resize-none"
         />
       </div>
 
       {/* Warning mese non applicato */}
       {!loading && items.length > 0 && items.every(i => !isApplied(i)) && (
-        <div className="flex items-center gap-3 bg-orange-500/10 border border-orange-500/30 rounded-2xl px-4 py-3 mb-4">
-          <AlertCircle size={18} className="text-orange-400 flex-shrink-0" />
-          <p className="text-sm text-orange-300">
+        <div className="flex items-center gap-3 bg-warn/10 border border-warn/30 rounded-2xl px-4 py-3 mb-4">
+          <AlertCircle size={18} className="text-warn flex-shrink-0" />
+          <p className="text-sm text-warn">
             Non hai ancora inserito le spese fisse per <span className="font-semibold">{MESI[month]} {year}</span>!
           </p>
         </div>
       )}
 
       {/* Lista */}
-      <div className="bg-slate-900 rounded-2xl overflow-hidden mb-4">
+      <div className="card rounded-2xl overflow-hidden mb-4">
         {loading ? (
-          <p className="text-center text-slate-500 py-8 text-sm">Caricamento...</p>
+          <p className="text-center text-fg-3 py-8 text-sm">Caricamento...</p>
         ) : items.length === 0 ? (
-          <p className="text-center text-slate-500 py-8 text-sm">Nessuna voce fissa</p>
+          <p className="text-center text-fg-3 py-8 text-sm">Nessuna voce fissa</p>
         ) : (
           items.map(item => (
-            <div key={item.id} className="border-b border-slate-800 last:border-0">
+            <div key={item.id} className="border-b border-line last:border-0">
               {editId === item.id ? (
                 <ItemForm
                   form={editForm}
@@ -290,20 +288,20 @@ export default function SpeseFissePage() {
               ) : selectionMode ? (
                 <button
                   onClick={() => toggleSelection(item.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left ${selectedIds.has(item.id) ? 'bg-blue-600/10' : 'hover:bg-slate-800'}`}>
+                  className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left ${selectedIds.has(item.id) ? 'bg-brand/10' : 'hover:bg-surface-2'}`}>
                   {selectedIds.has(item.id)
-                    ? <CheckSquare size={18} className="text-blue-400 flex-shrink-0" />
-                    : <Square size={18} className="text-slate-600 flex-shrink-0" />}
+                    ? <CheckSquare size={18} className="text-brand flex-shrink-0" />
+                    : <Square size={18} className="text-fg-4 flex-shrink-0" />}
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                     style={{ backgroundColor: categoryColor(item.category) }} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm truncate">{item.description}</p>
-                    <p className="text-xs text-slate-500 truncate">{item.note || item.category}</p>
+                    <p className="text-xs text-fg-3 truncate">{item.note || item.category}</p>
                   </div>
                   <span className={`text-sm font-semibold tabular-nums ${TYPE_COLOR[item.type]}`}>
                     {item.type === 'entrata' ? '+' : '-'}{item.amount.toFixed(2)}€
                   </span>
-                  {!isApplied(item) && <AlertCircle size={14} className="text-orange-400 flex-shrink-0" />}
+                  {!isApplied(item) && <AlertCircle size={14} className="text-warn flex-shrink-0" />}
                 </button>
               ) : (
                 <div className="flex items-center gap-3 px-4 py-3">
@@ -311,18 +309,18 @@ export default function SpeseFissePage() {
                     style={{ backgroundColor: categoryColor(item.category) }} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm truncate">{item.description}</p>
-                    <p className="text-xs text-slate-500 truncate">{item.note || item.category}</p>
+                    <p className="text-xs text-fg-3 truncate">{item.note || item.category}</p>
                   </div>
-                  {!isApplied(item) && <AlertCircle size={14} className="text-orange-400 flex-shrink-0" />}
+                  {!isApplied(item) && <AlertCircle size={14} className="text-warn flex-shrink-0" />}
                   <span className={`text-sm font-semibold tabular-nums mr-1 ${TYPE_COLOR[item.type]}`}>
                     {item.type === 'entrata' ? '+' : '-'}{item.amount.toFixed(2)}€
                   </span>
                   <button onClick={() => { setEditId(item.id); setEditForm({ description: item.description, amount: String(item.amount), category: item.category, type: item.type, note: item.note ?? '' }) }}
-                    className="p-1.5 text-slate-600 hover:text-blue-400 hover:bg-slate-800 rounded-lg transition-colors">
+                    className="p-1.5 text-fg-4 hover:text-brand hover:bg-surface-2 rounded-lg transition-colors">
                     <Pencil size={14} />
                   </button>
                   <button onClick={() => handleDelete(item.id, item.description)}
-                    className="p-1.5 text-slate-600 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors">
+                    className="p-1.5 text-fg-4 hover:text-neg hover:bg-surface-2 rounded-lg transition-colors">
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -334,8 +332,8 @@ export default function SpeseFissePage() {
 
       {/* Form aggiunta */}
       {adding ? (
-        <div className="bg-slate-900 rounded-2xl p-4">
-          <p className="text-sm font-semibold text-slate-300 mb-3">Nuova voce fissa</p>
+        <div className="card rounded-2xl p-4">
+          <p className="text-sm font-semibold text-fg mb-3">Nuova voce fissa</p>
           <ItemForm
             form={form}
             categories={addCats}
@@ -346,7 +344,7 @@ export default function SpeseFissePage() {
         </div>
       ) : (
         <button onClick={() => { setAdding(true); setEditId(null) }}
-          className="w-full flex items-center justify-center gap-2 py-3 bg-slate-900 hover:bg-slate-800 border border-dashed border-slate-700 rounded-2xl text-sm text-slate-400 hover:text-slate-200 transition-colors">
+          className="w-full flex items-center justify-center gap-2 py-3 bg-surface hover:bg-surface-2 border border-dashed border-line-strong rounded-2xl text-sm text-fg-2 hover:text-fg transition-colors">
           <Plus size={16} /> Aggiungi voce fissa
         </button>
       )}
@@ -363,9 +361,9 @@ function ItemForm({ form, categories, onChange, onSave, onCancel }: {
 }) {
   const TYPES: TransactionType[] = ['spesa', 'entrata', 'investimento']
   const TYPE_STYLE: Record<TransactionType, string> = {
-    spesa: 'bg-red-500/20 text-red-400 border-red-500/50',
-    entrata: 'bg-green-500/20 text-green-400 border-green-500/50',
-    investimento: 'bg-purple-500/20 text-purple-400 border-purple-500/50',
+    spesa: 'bg-neg/12 text-neg border-neg/50',
+    entrata: 'bg-pos/12 text-pos border-pos/50',
+    investimento: 'bg-inv/12 text-inv border-inv/50',
   }
   const TYPE_LABEL: Record<TransactionType, string> = {
     spesa: 'Spesa', entrata: 'Entrata', investimento: 'Investimento',
@@ -379,7 +377,7 @@ function ItemForm({ form, categories, onChange, onSave, onCancel }: {
           <button key={t} type="button"
             onClick={() => onChange({ ...form, type: t, category: '' })}
             className={`py-2 rounded-xl text-xs font-medium border transition-all ${
-              form.type === t ? TYPE_STYLE[t] : 'border-slate-700 text-slate-500 bg-slate-900'
+              form.type === t ? TYPE_STYLE[t] : 'border-line-strong text-fg-3 bg-surface'
             }`}>
             {TYPE_LABEL[t]}
           </button>
@@ -388,26 +386,26 @@ function ItemForm({ form, categories, onChange, onSave, onCancel }: {
       {/* Descrizione */}
       <input value={form.description} onChange={e => onChange({ ...form, description: e.target.value })}
         placeholder="Descrizione..."
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+        className="w-full bg-surface-2 border border-line-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand"
         autoFocus
       />
       {/* Importo */}
       <input type="number" inputMode="decimal" step="0.01" min="0"
         value={form.amount} onChange={e => onChange({ ...form, amount: e.target.value })}
         placeholder="Importo €"
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+        className="w-full bg-surface-2 border border-line-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand"
       />
       {/* Note */}
       <input value={form.note} onChange={e => onChange({ ...form, note: e.target.value })}
         placeholder="Note (opzionale)..."
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
+        className="w-full bg-surface-2 border border-line-strong rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand"
       />
       {/* Categoria */}
       <div className="grid grid-cols-2 gap-2 max-h-44 overflow-y-auto">
         {categories.map(c => (
           <button key={c.id} type="button" onClick={() => onChange({ ...form, category: c.name })}
             className={`flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs border transition-all text-left ${
-              form.category === c.name ? 'border-2 bg-slate-800' : 'border-slate-700 bg-slate-900'
+              form.category === c.name ? 'border-2 bg-surface-2' : 'border-line-strong bg-surface'
             }`}
             style={form.category === c.name ? { borderColor: c.hex } : {}}>
             <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: c.hex }} />
@@ -418,11 +416,11 @@ function ItemForm({ form, categories, onChange, onSave, onCancel }: {
       {/* Azioni */}
       <div className="flex gap-2">
         <button onClick={onSave}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm font-medium transition-colors">
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-brand hover:bg-brand/90 text-white rounded-xl text-sm font-medium transition-colors">
           <Check size={14} /> Salva
         </button>
         <button onClick={onCancel}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm text-slate-400 transition-colors">
+          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-surface-2 hover:bg-surface-3 rounded-xl text-sm text-fg-2 transition-colors">
           <X size={14} /> Annulla
         </button>
       </div>

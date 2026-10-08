@@ -20,27 +20,27 @@ export default function TransactionCard({ transaction, onDelete, showEdit }: Pro
   const color = categoryColor(category)
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-800 last:border-0">
+    <div className="flex items-center gap-3 px-4 py-3 border-b border-line last:border-0">
       <div
         className="w-2 h-10 rounded-full flex-shrink-0"
         style={{ backgroundColor: color }}
       />
       <div className="flex-1 min-w-0">
         <p className="font-medium text-sm truncate">{description}</p>
-        <p className="text-xs text-slate-400 mt-0.5">
+        <p className="text-xs text-fg-2 mt-0.5">
           {format(new Date(date), 'd MMM', { locale: it })} · {category}
         </p>
       </div>
       <div className="flex items-center gap-1">
         <span className={`text-sm font-semibold tabular-nums mr-1 ${
-          isInvestimento ? 'text-purple-400' : isEntrata ? 'text-green-400' : 'text-red-400'
+          isInvestimento ? 'text-inv' : isEntrata ? 'text-pos' : 'text-neg'
         }`}>
           {isSpesa ? '-' : '+'}{amount.toFixed(2)}€
         </span>
         {showEdit && (
           <Link
             href={`/modifica?id=${id}`}
-            className="p-1.5 rounded-lg text-slate-600 hover:text-blue-400 hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-fg-4 hover:text-brand hover:bg-surface-2 transition-colors"
           >
             <Pencil size={14} />
           </Link>
@@ -48,7 +48,7 @@ export default function TransactionCard({ transaction, onDelete, showEdit }: Pro
         {onDelete && (
           <button
             onClick={() => onDelete(id)}
-            className="p-1.5 rounded-lg text-slate-600 hover:text-red-400 hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-fg-4 hover:text-neg hover:bg-surface-2 transition-colors"
           >
             <Trash2 size={14} />
           </button>
