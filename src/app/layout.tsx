@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="it" className="dark">
       <body className={`${geist.variable} font-sans antialiased bg-slate-950 text-slate-50 min-h-screen`}>
         <DemoBanner />
-        <div className="max-w-2xl mx-auto pb-24">
+        <div className="pb-24">
           {children}
         </div>
         <Navigation />
